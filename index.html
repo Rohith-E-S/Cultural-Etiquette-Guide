@@ -5,63 +5,223 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cultural Etiquette Guide</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Additional styling for the index page */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --text-color: #2c3e50;
+            --light-bg: #f8f9fa;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
         header {
-            background-color: #212529;
-            color: white;
-            padding: 50px 20px;
+            background: linear-gradient(rgba(44, 62, 80, 0.9), rgba(44, 62, 80, 0.9)), url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            padding: 80px 20px;
             text-align: center;
+            position: relative;
         }
 
         header h1 {
-            font-size: 3em;
-            margin-bottom: 10px;
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         header p.subtitle {
-            font-size: 1.2em;
-            font-weight: 400;
+            font-size: 1.4em;
+            font-weight: 300;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.9;
         }
 
         main {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            padding: 40px 20px;
-            margin: 20px auto;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin: -40px auto 40px;
             max-width: 1200px;
+            position: relative;
+            z-index: 1;
         }
 
         .input-section {
-            margin-bottom: 30px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .input-section label {
+            display: block;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            font-weight: 600;
         }
 
         .input-group {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         .input-group input,
         .input-group select {
             width: 100%;
-            max-width: 400px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: var(--light-bg);
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
         }
 
         .input-group button {
             width: 100%;
-            max-width: 200px;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .input-group button:first-of-type {
+            background: var(--secondary-color);
+            color: var(--white);
+        }
+
+        .input-group button:last-of-type {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .input-group button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .result-section {
-            margin-top: 30px;
-            text-align: center;
+            margin-top: 40px;
+            padding: 30px;
+            background: var(--light-bg);
+            border-radius: 15px;
+            transition: all 0.3s ease;
         }
 
+        .result-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 2em;
+        }
+
+        .result-text {
+            line-height: 1.8;
+            font-size: 1.1em;
+        }
+
+        .result-text h3 {
+            color: var(--secondary-color);
+            margin: 20px 0 10px;
+        }
+
+        .result-text ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+
+        .result-text li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 10px;
+        }
+
+        .result-text li:before {
+            content: "•";
+            color: var(--secondary-color);
+            position: absolute;
+            left: 0;
+            font-size: 1.5em;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.5em;
+            }
+            
+            header p.subtitle {
+                font-size: 1.2em;
+            }
+
+            main {
+                margin: -20px 20px 20px;
+                padding: 20px;
+            }
+
+            .input-group {
+                gap: 15px;
+            }
+        }
     </style>
     <!-- Google Maps API Script (Add your own API key) -->
     <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap" async
@@ -216,15 +376,19 @@
     </header>
     <main>
         <section class="input-section">
-            <label for="cityInput">Enter a City Name:</label>
+            <label for="cityInput">Where would you like to explore?</label>
             <div class="input-group">
-                <input type="text" id="cityInput" placeholder="E.g., Delhi">
+                <input type="text" id="cityInput" placeholder="Enter a city name (e.g., Tokyo, Paris, New York)">
                 <select id="answerType">
-                    <option value="short">Short Answer</option>
-                    <option value="detailed">Detailed Answer</option>
+                    <option value="short">Quick Overview</option>
+                    <option value="detailed">Comprehensive Guide</option>
                 </select>
-                <button onclick="fetchCulturalEtiquette()">Explore Etiquette</button>
-                <button onclick="redirectToMap()">Show Map</button>
+                <button onclick="fetchCulturalEtiquette()">
+                    <i class="fas fa-search"></i> Explore Etiquette
+                </button>
+                <button onclick="redirectToMap()">
+                    <i class="fas fa-map-marker-alt"></i> View on Map
+                </button>
             </div>
         </section>
         <section class="result-section">
