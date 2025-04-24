@@ -169,6 +169,8 @@
             position: relative;
             padding-left: 25px;
             margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
         }
 
         .result-text li:before {
@@ -177,6 +179,8 @@
             position: absolute;
             left: 0;
             font-size: 1.5em;
+            line-height: 1.2;
+            top: 0;
         }
 
         .fade-in {
@@ -268,7 +272,16 @@
                 const requestBody = {
                     contents: [{
                         parts: [{
-                            text: `Provide a ${answerType} cultural etiquette guide for travelers visiting ${city} in English.`
+                            text: answerType === "tourist" 
+                                ? `Provide a comprehensive tourist guide for ${city} including:
+                                   1. Top tourist attractions and landmarks
+                                   2. Cultural etiquette and customs
+                                   3. Best times to visit
+                                   4. Local transportation tips
+                                   5. Must-try local experiences
+                                   6. Safety tips for tourists
+                                   Format the response with clear sections and bullet points.`
+                                : `Provide a ${answerType} cultural etiquette guide for travelers visiting ${city} in English.`
                         }]
                     }]
                 };
@@ -382,6 +395,7 @@
                 <select id="answerType">
                     <option value="short">Quick Overview</option>
                     <option value="detailed">Comprehensive Guide</option>
+                    <option value="tourist">Tourist's Guide</option>
                 </select>
                 <button onclick="fetchCulturalEtiquette()">
                     <i class="fas fa-search"></i> Explore Etiquette
