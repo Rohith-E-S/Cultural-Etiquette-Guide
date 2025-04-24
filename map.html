@@ -4,22 +4,163 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>City Cultural Map</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --text-color: #2c3e50;
+            --light-bg: #f8f9fa;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: var(--text-color);
+        }
+
+        .header {
+            background: linear-gradient(rgba(44, 62, 80, 0.9), rgba(44, 62, 80, 0.9)), url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            font-weight: 300;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 12px 24px;
+            background-color: var(--secondary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            background-color: var(--primary-color);
+        }
+
+        .map-container {
+            width: 100%;
+            height: calc(100vh - 200px);
+            margin: 0;
+            position: relative;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+            border-radius: 0;
+        }
+
+        .info-window {
+            font-family: 'Poppins', sans-serif;
+            padding: 10px;
+        }
+
+        .info-window h3 {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .info-window p {
+            color: var(--text-color);
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .header p {
+                font-size: 1em;
+            }
+
+            .map-container {
+                height: calc(100vh - 150px);
+            }
+
+            .back-button {
+                padding: 10px 20px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDGWBV43sy6Y-fczpQ9bDVFA9448D_HMX8&callback=initMap" async defer></script>
     <script>
         let map;
+        let markers = [];
 
-        // Function to get the city name from the query parameter
         function getCityFromQuery() {
             const params = new URLSearchParams(window.location.search);
             return params.get("city");
         }
 
-        // Initialize the map
         function initMap() {
-            map = new google.maps.Map(document.getElementById("map"), {
-                center: { lat: 20, lng: 0 }, // Default center
-                zoom: 2 // World map view
-            });
+            const mapOptions = {
+                center: { lat: 20, lng: 0 },
+                zoom: 2,
+                styles: [
+                    {
+                        "featureType": "poi",
+                        "elementType": "labels",
+                        "stylers": [{ "visibility": "off" }]
+                    }
+                ],
+                mapTypeControl: true,
+                mapTypeControlOptions: {
+                    style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+                    position: google.maps.ControlPosition.TOP_RIGHT
+                },
+                zoomControl: true,
+                zoomControlOptions: {
+                    position: google.maps.ControlPosition.RIGHT_CENTER
+                },
+                streetViewControl: false,
+                fullscreenControl: true
+            };
+
+            map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
             const city = getCityFromQuery();
             if (city) {
@@ -27,7 +168,6 @@
             }
         }
 
-        // Show the map for the specified city
         function showCityMap(city) {
             if (!city) {
                 alert("Please enter a city name.");
@@ -38,7 +178,7 @@
             geocoder.geocode({ address: city }, (results, status) => {
                 if (status === "OK") {
                     map.setCenter(results[0].geometry.location);
-                    map.setZoom(13); // Zoom in on the city
+                    map.setZoom(13);
                     findCulturalSites(results[0].geometry.location);
                 } else {
                     alert("City not found. Please check the spelling or try another city.");
@@ -46,11 +186,14 @@
             });
         }
 
-        // Find cultural sites near the specified location
         function findCulturalSites(location) {
+            // Clear existing markers
+            markers.forEach(marker => marker.setMap(null));
+            markers = [];
+
             const request = {
                 location: location,
-                radius: '5000', // Search within 5km
+                radius: '5000',
                 type: ['museum', 'art_gallery', 'church', 'hindu_temple', 'mosque', 'synagogue', 'historical_site']
             };
 
@@ -58,31 +201,48 @@
             service.nearbySearch(request, (results, status) => {
                 if (status === google.maps.places.PlacesServiceStatus.OK) {
                     results.forEach(place => {
-                        new google.maps.Marker({
+                        const marker = new google.maps.Marker({
                             map: map,
                             position: place.geometry.location,
-                            title: place.name
+                            title: place.name,
+                            icon: {
+                                url: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                            }
                         });
+
+                        const infoWindow = new google.maps.InfoWindow({
+                            content: `
+                                <div class="info-window">
+                                    <h3>${place.name}</h3>
+                                    <p>${place.vicinity || 'Address not available'}</p>
+                                </div>
+                            `
+                        });
+
+                        marker.addListener('click', () => {
+                            infoWindow.open(map, marker);
+                        });
+
+                        markers.push(marker);
                     });
                 } else {
                     alert("No cultural sites found near this location.");
                 }
             });
         }
-
-        // Handle the "Show Map" button click
-        function handleShowMap() {
-            const city = document.getElementById("cityInput").value.trim();
-            showCityMap(city);
-        }
     </script>
 </head>
 <body>
-    <!-- Back button -->
-    <button onclick="window.location.href='index.html'" style="position: absolute; top: 30px; left: 20px; padding: 10px;font-size: medium; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;">
-        Back
-    </button>
+    <div class="header">
+        <button class="back-button" onclick="window.location.href='index.html'">
+            <i class="fas fa-arrow-left"></i> Back to Guide
+        </button>
+        <h1>Cultural Sites Map</h1>
+        <p>Explore cultural landmarks and important sites in your destination</p>
+    </div>
     
-    <div id="map" style="width: 100%; height: 700px; margin-top: 10%;"></div>
+    <div class="map-container">
+        <div id="map"></div>
+    </div>
 </body>
 </html>
